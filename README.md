@@ -1,4 +1,4 @@
-# Moranguinho Stock Manager
+# Jambinho Stock Manager
 
 Sistema web profissional de almoxarifado do **Supermercado Moranguinho**.
 
