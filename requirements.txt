@@ -1,0 +1,5 @@
+# Moranguinho Stock Manager — dependências Python
+# Instale com: pip install -r requirements.txt
+# O ambiente virtual fica em: backend/venv/
+
+-r backend/requirements.txt

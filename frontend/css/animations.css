@@ -1,0 +1,105 @@
+/* ── Painel de dados ── */
+.data-panel {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-lg);
+  overflow: hidden; box-shadow: var(--shadow-card);
+}
+.data-toolbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 14px 18px; border-bottom: 1px solid var(--border); flex-wrap: wrap;
+  background: var(--surface-2);
+}
+.data-toolbar .search { flex: 1; min-width: 200px; max-width: 340px; }
+.data-toolbar-actions { display: flex; gap: 9px; flex-wrap: wrap; }
+
+/* ── Tabelas ── */
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead { background: var(--surface-2); }
+th {
+  padding: 12px 16px; text-align: left; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted);
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+td {
+  padding: 13px 16px; border-bottom: 1px solid var(--border);
+  font-size: 13px; vertical-align: middle; color: var(--text);
+}
+tbody tr { transition: background var(--transition); }
+tbody tr:hover td { background: var(--primary-soft); }
+tbody tr:last-child td { border-bottom: none; }
+.td-actions { display: flex; gap: 7px; }
+.td-strong { font-weight: 600; color: var(--text); }
+
+.empty-row td {
+  text-align: center; padding: 48px 16px; color: var(--text-muted); font-size: 14px;
+}
+
+/* ── Filtros ── */
+.filter-row { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-row select, .filter-row input { width: auto; min-width: 170px; }
+
+/* ── Scanner / código de barras ── */
+.scanner-panel {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-lg);
+  padding: 16px 20px; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  border-left: 3px solid var(--primary); box-shadow: var(--shadow-card);
+}
+.scanner-panel label { font-size: 13px; font-weight: 600; white-space: nowrap; color: var(--text-secondary); }
+.scanner-panel input { max-width: 280px; }
+
+/* ── Relatórios ── */
+.report-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.report-card {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-lg);
+  padding: 22px; cursor: pointer; transition: var(--transition);
+  position: relative; overflow: hidden; box-shadow: var(--shadow-card);
+}
+.report-card::after {
+  content: '↓'; position: absolute; top: 18px; right: 18px;
+  width: 30px; height: 30px; border-radius: 50%; background: var(--surface-2);
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+  color: var(--text-muted); transition: var(--transition);
+}
+.report-card:hover { border-color: rgba(214,40,40,0.3); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(214,40,40,0.08); }
+.report-card:hover::after { background: var(--primary-light); color: var(--primary); }
+.report-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 7px; letter-spacing: -0.02em; padding-right: 38px; color: var(--text); }
+.report-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+.report-card .format {
+  font-size: 10px; color: var(--primary); margin-top: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(26, 18, 16, 0.45); backdrop-filter: blur(4px);
+  z-index: 500; display: none; align-items: center; justify-content: center; padding: 24px;
+}
+.modal-overlay.open { display: flex; animation: fadeIn 0.18s ease; }
+.modal {
+  background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius-xl);
+  width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto;
+  box-shadow: var(--shadow); animation: slideUp 0.22s ease;
+}
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 17px 22px; border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.modal-head h3 { font-size: 15px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); }
+.modal-close {
+  background: var(--surface); border: 1px solid var(--border); color: var(--text-muted);
+  font-size: 18px; cursor: pointer; line-height: 1; padding: 4px 9px; border-radius: 7px;
+  transition: var(--transition);
+}
+.modal-close:hover { color: var(--primary); border-color: var(--primary); }
+.modal-body { padding: 20px 22px; }
+.modal-foot {
+  padding: 14px 22px; border-top: 1px solid var(--border);
+  display: flex; justify-content: flex-end; gap: 9px; background: var(--surface-2);
+}
+
+@media (max-width: 768px) {
+  .report-grid { grid-template-columns: 1fr; }
+  table { min-width: 560px; }
+}

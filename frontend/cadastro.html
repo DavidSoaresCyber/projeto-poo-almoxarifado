@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro — Moranguinho Stock Manager</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <div class="auth-layout">
+    <div class="auth-visual">
+      <img src="assets/logo/logo.png" alt="">
+      <h1>Bem-vindo ao <em>time</em></h1>
+      <p>Preencha seus dados para solicitar acesso ao sistema de almoxarifado. Seu gestor aprovará em breve.</p>
+      <div class="auth-tagline">📋 Campos com * são obrigatórios</div>
+    </div>
+    <div class="auth-form-side">
+      <div class="auth-box fade-in">
+        <h2>Criar sua conta</h2>
+        <p class="subtitle">Preencha os dados abaixo — leva menos de 2 minutos</p>
+        <div id="alert-box"></div>
+        <form id="cadastro-form">
+          <div class="photo-field">
+            <div class="photo-preview" id="photo-preview">Foto</div>
+            <div><label>Foto de perfil (opcional)</label><input type="file" id="foto" accept="image/*"></div>
+          </div>
+          <div class="form-group"><label>Nome completo</label><input id="nome" class="form-control" required minlength="3"></div>
+          <div class="form-group"><label>E-mail</label><input type="email" id="email" class="form-control" required></div>
+          <div class="form-group"><label>Telefone</label><input id="telefone" class="form-control" placeholder="(11) 99999-9999"></div>
+          <div class="form-group"><label>Cargo</label><select id="cargo" class="form-control" required></select></div>
+          <div class="form-group"><label>Senha</label><input type="password" id="senha" class="form-control" required minlength="6"></div>
+          <div class="form-group"><label>Confirmar senha</label><input type="password" id="confirmar" class="form-control" required></div>
+          <button type="submit" class="btn btn-primary auth-submit">Cadastrar</button>
+        </form>
+        <p class="auth-link">Já tem conta? <a href="login.html">Entrar</a></p>
+      </div>
+    </div>
+  </div>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    let fotoBase64 = null;
+    document.getElementById('foto').onchange = e => {
+      const f = e.target.files[0]; if (!f) return;
+      const r = new FileReader();
+      r.onload = () => { fotoBase64 = r.result; document.getElementById('photo-preview').innerHTML = `<img src="${fotoBase64}">`; };
+      r.readAsDataURL(f);
+    };
+    const cargosPadrao = ['Funcionário','Estoquista','Supervisor','Operador de Caixa'];
+    api.cargos().then(list => {
+      const opts = list.filter(c => c.valor !== 'Administrador').map(c => `<option value="${c.valor}">${c.valor}</option>`).join('');
+      document.getElementById('cargo').innerHTML = opts || cargosPadrao.map(c => `<option>${c}</option>`).join('');
+    }).catch(() => {
+      document.getElementById('cargo').innerHTML = cargosPadrao.map(c => `<option>${c}</option>`).join('');
+    });
+    document.getElementById('cadastro-form').onsubmit = async e => {
+      e.preventDefault();
+      const box = document.getElementById('alert-box');
+      const senha = document.getElementById('senha').value;
+      if (senha !== document.getElementById('confirmar').value) {
+        box.innerHTML = '<div class="alert alert-error">As senhas não coincidem</div>'; return;
+      }
+      try {
+        await api.register({
+          nome_completo: document.getElementById('nome').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          telefone: document.getElementById('telefone').value.trim() || null,
+          cargo: document.getElementById('cargo').value,
+          senha, confirmar_senha: senha,
+          foto_perfil: fotoBase64,
+        });
+        box.innerHTML = '<div class="alert alert-success">Cadastro realizado. Redirecionando…</div>';
+        setTimeout(() => location.href = 'login.html', 1200);
+      } catch (err) {
+        box.innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+      }
+    };
+  </script>
+</body>
+</html>

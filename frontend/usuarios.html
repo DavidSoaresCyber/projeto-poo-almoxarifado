@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Equipe — Moranguinho</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <div class="loading-screen" id="loading-screen"><div class="spinner"></div></div>
+  <div class="app-layout">
+    <div id="sidebar-container"></div>
+    <div class="main-content">
+      <div id="navbar-container"></div>
+      <div class="page-container">
+        <div class="page-header"><h1>Equipe</h1><p>Quem usa o sistema e o que cada um faz</p></div>
+        <div class="data-panel" style="margin-bottom:20px">
+          <div class="data-toolbar"><strong style="font-size:14px">Funcionários</strong></div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Nome</th><th>E-mail</th><th>Cargo</th><th>Nível</th><th>Status</th><th>Último acesso</th></tr></thead>
+              <tbody id="users-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="data-panel" id="logs-panel">
+          <div class="data-toolbar"><strong style="font-size:14px">O que cada um andou fazendo</strong></div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Data</th><th>Ação</th><th>Detalhes</th><th>Usuário</th></tr></thead>
+              <tbody id="logs-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="components/sidebar.js"></script>
+  <script src="components/navbar.js"></script>
+  <script src="js/morangia.js"></script>
+  <script>
+    if (!hasPermission('usuarios')) location.href = 'dashboard.html';
+    document.addEventListener('DOMContentLoaded', () => initApp('usuarios.html', load));
+    async function load() {
+      const users = await api.usuarios();
+      document.getElementById('users-tbody').innerHTML = users.map(u => `<tr>
+        <td class="td-strong">${u.nome_completo}</td><td>${u.email}</td>
+        <td><span class="badge badge-primary">${u.cargo}</span></td>
+        <td>${u.nivel_acesso}</td>
+        <td>${u.ativo ? '<span class="badge badge-success">Ativo</span>' : '<span class="badge badge-danger">Inativo</span>'}</td>
+        <td>${formatDate(u.ultimo_acesso)}</td></tr>`).join('');
+      try {
+        const logs = await api.logs();
+        document.getElementById('logs-tbody').innerHTML = logs.length
+          ? logs.map(l => `<tr><td>${formatDate(l.criado_em)}</td><td>${l.acao}</td><td>${l.detalhes||'—'}</td><td>${l.usuario||'—'}</td></tr>`).join('')
+          : '<tr class="empty-row"><td colspan="4">Nenhum registro</td></tr>';
+      } catch { document.getElementById('logs-panel').classList.add('hidden'); }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatórios — Moranguinho</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <div class="loading-screen" id="loading-screen"><div class="spinner"></div></div>
+  <div class="app-layout">
+    <div id="sidebar-container"></div>
+    <div class="main-content">
+      <div id="navbar-container"></div>
+      <div class="page-container">
+        <div class="page-header"><h1>Relatórios</h1><p>Baixe o que precisar em segundos</p></div>
+        <div class="report-grid">
+          <div class="report-card" onclick="baixar('/relatorios/estoque/pdf','relatorio_estoque.pdf')">
+            <h3>Inventário completo</h3>
+            <p>Todos os produtos com quantidade, preço e validade. Bom pra levar pra reunião.</p>
+            <div class="format">PDF</div>
+          </div>
+          <div class="report-card" onclick="baixar('/relatorios/estoque/excel','relatorio_estoque.xlsx')">
+            <h3>Inventário em planilha</h3>
+            <p>Mesmas informações, mas em Excel. Filtros, fórmulas e tudo mais à vontade.</p>
+            <div class="format">Excel</div>
+          </div>
+          <div class="report-card" onclick="baixar('/relatorios/movimentacoes/excel','movimentacoes.xlsx')">
+            <h3>Histórico de movimentações</h3>
+            <p>Entradas e saídas registradas. Útil pra conferir o que aconteceu e quando.</p>
+            <div class="format">Excel</div>
+          </div>
+          <div class="report-card" onclick="gerarResumo()">
+            <h3>Como está o estoque agora</h3>
+            <p>Um resumo rápido da situação atual. Aparece aqui mesmo, sem download.</p>
+            <div class="format">Texto</div>
+          </div>
+        </div>
+        <div class="panel hidden" id="resumo-panel" style="margin-top:20px">
+          <div class="panel-header"><h3>Resumo do estoque</h3></div>
+          <pre id="resumo-text" style="padding:4px 0;font-size:13px;color:var(--text-secondary);white-space:pre-wrap;font-family:inherit"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="components/sidebar.js"></script>
+  <script src="components/navbar.js"></script>
+  <script src="js/morangia.js"></script>
+  <script>
+    if (!hasPermission('relatorios')) location.href = 'dashboard.html';
+    document.addEventListener('DOMContentLoaded', () => initApp('relatorios.html'));
+    async function baixar(url, filename) {
+      try { await api.download(url, filename); showToast('Download iniciado', 'success'); }
+      catch (e) { showToast(e.message, 'error'); }
+    }
+    async function gerarResumo() {
+      const s = await api.dashboard();
+      const txt = `Resumo — ${new Date().toLocaleString('pt-BR')}\n\nProdutos: ${s.total_produtos}\nEstoque baixo: ${s.estoque_baixo}\nVencendo (7d): ${s.produtos_vencendo}\nVencidos: ${s.produtos_vencidos}\nValor em estoque: ${formatCurrency(s.valor_estoque)}\nMovimentações hoje: ${s.movimentacoes_hoje}`;
+      document.getElementById('resumo-text').textContent = txt;
+      document.getElementById('resumo-panel').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

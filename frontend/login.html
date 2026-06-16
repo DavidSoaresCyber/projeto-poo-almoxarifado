@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — Moranguinho Stock Manager</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/login.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <div class="auth-layout">
+    <div class="auth-visual">
+      <img src="assets/logo/logo.png" alt="">
+      <h1>Stock <em>Moranguinho</em></h1>
+      <p>O sistema de almoxarifado do nosso supermercado. Entre com seu e-mail corporativo para continuar.</p>
+      <div class="auth-tagline">💡 Dica: use o mesmo e-mail que você recebeu no RH</div>
+    </div>
+    <div class="auth-form-side">
+      <div class="auth-box fade-in">
+        <h2>Que bom te ver de novo!</h2>
+        <p class="subtitle">Entre com seu e-mail e senha para acessar o painel</p>
+        <div id="alert-box"></div>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="email">E-mail corporativo</label>
+            <input type="email" id="email" class="form-control" placeholder="seu.nome@moranguinho.com.br" required autocomplete="username">
+          </div>
+          <div class="form-group">
+            <label for="senha">Senha</label>
+            <div class="password-field">
+              <input type="password" id="senha" class="form-control" placeholder="Digite sua senha" required autocomplete="current-password">
+              <button type="button" class="password-toggle" id="toggle-pwd">Ver</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label><input type="checkbox" id="lembrar"> Lembrar meu e-mail</label>
+            <a href="index.html">Voltar ao início</a>
+          </div>
+          <button type="submit" class="btn btn-primary auth-submit" id="btn-login">Entrar no sistema</button>
+        </form>
+        <p class="auth-link">Ainda não tem conta? <a href="cadastro.html">Solicite seu cadastro</a></p>
+        <p class="auth-link" style="margin-top:14px;font-size:12px;color:var(--text-muted)">Demonstração: admin@moranguinho.com.br · admin123</p>
+      </div>
+    </div>
+  </div>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    if (getToken()) location.href = 'dashboard.html';
+    document.getElementById('toggle-pwd').onclick = () => {
+      const s = document.getElementById('senha');
+      const show = s.type === 'password';
+      s.type = show ? 'text' : 'password';
+      document.getElementById('toggle-pwd').textContent = show ? 'Ocultar' : 'Ver';
+    };
+    const saved = localStorage.getItem('moranguinho_remember');
+    if (saved) { document.getElementById('email').value = saved; document.getElementById('lembrar').checked = true; }
+    document.getElementById('login-form').onsubmit = async e => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-login');
+      btn.disabled = true; btn.textContent = 'Entrando…';
+      document.getElementById('alert-box').innerHTML = '';
+      try {
+        const res = await api.login(document.getElementById('email').value, document.getElementById('senha').value);
+        saveAuth(res.access_token, res.usuario);
+        if (document.getElementById('lembrar').checked) localStorage.setItem('moranguinho_remember', document.getElementById('email').value);
+        else localStorage.removeItem('moranguinho_remember');
+        location.href = 'dashboard.html';
+      } catch (err) {
+        document.getElementById('alert-box').innerHTML = `<div class="alert alert-error">${err.message}</div>`;
+        btn.disabled = false; btn.textContent = 'Entrar no sistema';
+      }
+    };
+  </script>
+</body>
+</html>

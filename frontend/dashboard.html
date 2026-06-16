@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Início — Moranguinho</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="loading-screen" id="loading-screen"><div class="spinner"></div></div>
+  <div class="app-layout">
+    <div id="sidebar-container"></div>
+    <div class="main-content">
+      <div id="navbar-container"></div>
+      <div class="page-container">
+        <div id="user-card"></div>
+        <div class="stats-grid" id="stats-grid"></div>
+        <div class="charts-row">
+          <div class="panel"><div class="panel-header"><h3>Movimentações da semana</h3><p>O que entrou e saiu nos últimos 7 dias</p></div><canvas id="chart-mov" height="200"></canvas></div>
+          <div class="panel"><div class="panel-header"><h3>O que tem no estoque</h3><p>Produtos divididos por categoria</p></div><canvas id="chart-cat" height="200"></canvas></div>
+        </div>
+        <div class="panel"><div class="panel-header"><h3>Últimas movimentações</h3><p>O que aconteceu agora há pouco</p></div><div class="activity-list" id="activity-list"></div></div>
+      </div>
+    </div>
+  </div>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="components/sidebar.js"></script>
+  <script src="components/navbar.js"></script>
+  <script src="js/morangia.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

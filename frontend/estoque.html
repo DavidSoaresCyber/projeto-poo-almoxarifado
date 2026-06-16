@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estoque — Moranguinho</title>
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+  <div class="loading-screen" id="loading-screen"><div class="spinner"></div></div>
+  <div class="app-layout">
+    <div id="sidebar-container"></div>
+    <div class="main-content">
+      <div id="navbar-container"></div>
+      <div class="page-container">
+        <div class="page-header">
+          <div><h1>Estoque</h1><p>O que tem, quanto tem e o que está no limite</p></div>
+          <button class="btn btn-primary btn-sm" onclick="abrirMov()">+ Movimentação</button>
+        </div>
+        <div class="stats-grid" id="estoque-stats"></div>
+        <div class="data-panel">
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Produto</th><th>SKU</th><th>Quantidade</th><th>Mínimo</th><th>Estoque</th><th>Validade</th></tr></thead>
+              <tbody id="estoque-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="components/sidebar.js"></script>
+  <script src="components/navbar.js"></script>
+  <script src="components/modal.js"></script>
+  <script src="js/morangia.js"></script>
+  <script src="js/estoque.js"></script>
+</body>
+</html>
